@@ -7,7 +7,8 @@ Submitted by Leif Ulstrup.  June 12, 2014.
 Note: This code assumes that the activity.zip data file is in the current working directory.  If not, use setwd() to change the directory to the correct location.
 
 Unzip the compressed activity log file...
-```{r unzipStep, echo=TRUE}
+
+```r
 zipfile <- "activity.zip"
 fileThere <- (zipfile %in% dir())
 if(!fileThere){stop("Error:  activity.zip missing from directory")}
@@ -15,9 +16,7 @@ unzip(zipfile)
 ```
 
 Read the activity.csv file into memory...
-```{r readFile, echo=TRUE}
-activity <- read.csv("activity.csv")
-```
+
 
 ## What is mean total number of steps taken per day?
 
