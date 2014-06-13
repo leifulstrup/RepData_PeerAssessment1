@@ -33,15 +33,14 @@ Compute the total steps per day...
 dailySteps <- tapply(activity$steps, activity$date, FUN=sum)
 ```
 
-Create a histogram of the total number of steps taken each day
+## Create a histogram of the total number of steps taken each day
 
 
 ```r
-hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 22500, 25000), main = paste("Subject Anonymous Activity (Steps) from Oct-Nov 2012"), xlab = "Steps/Day", ylab = "Number of Days" , ylim = c(0,20))
+hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 22500, 25000), main = paste("Subject Anonymous Activity (Steps) from Oct-Nov 2012"), xlab = "Steps/Day", ylab = "Number of Days" , ylim = c(0,30))
 ```
 
 ![plot of chunk plotHistogram](figure/plotHistogram.png) 
-
 
 
 ## What is mean total number of steps taken per day?
@@ -126,7 +125,7 @@ print(maxsteps)
 ## 1:      835        206.2
 ```
 
-Time interval 835 has the maximum average steps per time period with 206.1698 average steps.
+### Time interval 835 has the maximum average steps per time period with 206.1698 average steps.
 
 
 
@@ -138,6 +137,130 @@ plot(activity$interval, activity$steps, main="All Steps/Sampling Interval (5m) f
 
 ## Imputing missing values
 
+
+```r
+ok <- complete.cases(activity)
+countNAs <- sum(!ok)
+totalrows <- nrow(activity)
+```
+
+There are 2304 samples missing data from a total of 17568 rows in the activity log data. 
+
+To populate the data that is missing and impute values, I will use the average values for that same time interval from the earlier analysis above where we computed the average steps per time period.
+
+
+```r
+imputeFcn <- function(x){
+  print(names(x))
+  if(x$steps == NA) {
+    getSteps <- dtinterval[dtinterval$interval == x$interval,]$averageSteps
+    x$steps <- getSteps}
+  theResult <- x
+  return(theResult)
+}
+
+# create a new data set and replace NA values with the time interval averages computed earlier with dtinterval
+xactivity <- activity
+# resorted to inefficient for loop to do look up replacements - could not find suitable vector operation - need more research on this - ok for homework assignment but...
+for(i in 1:nrow(xactivity)){
+  if(is.na(xactivity[i,1])){
+    xactivity[i,1] <- dtinterval[dtinterval$interval == xactivity[i,3],]$averageSteps
+  }
+}
+
+summary(xactivity)
+```
+
+```
+##      steps            date               interval   
+##  Min.   :  0.0   Min.   :2012-10-01   Min.   :   0  
+##  1st Qu.:  0.0   1st Qu.:2012-10-16   1st Qu.: 589  
+##  Median :  0.0   Median :2012-10-31   Median :1178  
+##  Mean   : 37.4   Mean   :2012-10-31   Mean   :1178  
+##  3rd Qu.: 27.0   3rd Qu.:2012-11-15   3rd Qu.:1766  
+##  Max.   :806.0   Max.   :2012-11-30   Max.   :2355
+```
+
+```r
+summary(activity)
+```
+
+```
+##      steps            date               interval   
+##  Min.   :  0.0   Min.   :2012-10-01   Min.   :   0  
+##  1st Qu.:  0.0   1st Qu.:2012-10-16   1st Qu.: 589  
+##  Median :  0.0   Median :2012-10-31   Median :1178  
+##  Mean   : 37.4   Mean   :2012-10-31   Mean   :1178  
+##  3rd Qu.: 12.0   3rd Qu.:2012-11-15   3rd Qu.:1766  
+##  Max.   :806.0   Max.   :2012-11-30   Max.   :2355  
+##  NA's   :2304
+```
+
+Compute the total steps per day after replacing NAs with time period averages...
+
+```r
+xdailySteps <- tapply(xactivity$steps, xactivity$date, FUN=sum)
+```
+
+Create a histogram of the total number of steps taken each day
+
+
+```r
+par(mfrow=c(1,2), mar=c(5.1, 4.1, 5.6, 2.1))
+hist(xdailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 22500, 25000), main = paste("Subject Anonymous\n Activity (Steps)\n from Oct-Nov 2012\n NAs Replaced with \n Average Time Period Values"), xlab = "Steps/Day", ylab = "Number of Days" , ylim = c(0,30))
+
+hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 22500, 25000), main = paste("Subject Anonymous\n Activity (Steps)\n from Oct-Nov 2012\n Original Data with NAs"), xlab = "Steps/Day", ylab = "Number of Days" , ylim = c(0,30))
+```
+
+![plot of chunk xplotHistogram](figure/xplotHistogram.png) 
+
+```r
+xtheSummary <- summary(xdailySteps, na.rm=TRUE)
+print(xtheSummary)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    9820   10800   10800   12800   21200
+```
+
+```r
+xtheMean <- as.numeric(xtheSummary["Mean"])
+textMean <- paste("The Mean Number of Steps/Day :", xtheMean)
+print(theMean)
+```
+
+```
+## [1] 10800
+```
+
+```r
+print(textMean)
+```
+
+```
+## [1] "The Mean Number of Steps/Day : 10800"
+```
+
+```r
+xtheMedian <- as.numeric(theSummary["Median"])
+textMedian <- paste("The Median Number of Steps/Day :", xtheMedian)
+print(theMedian)
+```
+
+```
+## [1] 10800
+```
+
+```r
+print(textMedian)
+```
+
+```
+## [1] "The Median Number of Steps/Day : 10800"
+```
+
+### The Mean and Median remained the same after using this replacement technique for NAs; however, the plots show the increased magnitude of the histogram frequency results with even more emphasis on the peak of the overall daily distribution mean.
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
