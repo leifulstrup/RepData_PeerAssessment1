@@ -17,6 +17,30 @@ unzip(zipfile)
 
 Read the activity.csv file into memory...
 
+```r
+activity <- read.csv("activity.csv")
+```
+
+Convert dates into date format for calculation purposes...
+
+```r
+activity$date <- as.Date(activity$date)
+```
+
+Compute the total steps per day...
+
+```r
+dailySteps <- tapply(activity$steps, activity$date, FUN=sum)
+```
+
+Create a histogram of the total number of steps taken each day
+
+
+```r
+hist(dailySteps)
+```
+
+![plot of chunk plotHistogram](figure/plotHistogram.png) 
 
 ## What is mean total number of steps taken per day?
 
