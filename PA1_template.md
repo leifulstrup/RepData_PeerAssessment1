@@ -111,16 +111,30 @@ intervalsteps <- data.frame(interval = activity$interval, steps = activity$steps
 intervalstepsdt <- data.table(intervalsteps)
 dtinterval <- intervalstepsdt[, mean(steps, na.rm= TRUE), by = interval]
 setnames(dtinterval, "V1", "averageSteps")
-plot(dtinterval$interval, dtinterval$averageSteps, type="l", main="Mean Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods -]in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
+plot(dtinterval$interval, dtinterval$averageSteps, type="l", main="Mean Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
 ```
 
-![plot of chunk dailypattern](figure/dailypattern1.png) 
+![plot of chunk dailypattern](figure/dailypattern.png) 
 
 ```r
-plot(activity$interval, activity$steps, main="All Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods -]in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
+maxsteps <- dtinterval[dtinterval$averageSteps == max(dtinterval$averageSteps, na.rm=TRUE)]
+print(maxsteps)
 ```
 
-![plot of chunk dailypattern](figure/dailypattern2.png) 
+```
+##    interval averageSteps
+## 1:      835        206.2
+```
+
+Time interval 835 has the maximum average steps per time period with 206.1698 average steps.
+
+
+
+```r
+plot(activity$interval, activity$steps, main="All Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
+```
+
+![plot of chunk plotrawsteps ](figure/plotrawsteps .png) 
 
 ## Imputing missing values
 
