@@ -42,14 +42,15 @@ hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 225
 ## What is mean total number of steps taken per day?
 
 ```{r meanmedian, echo=TRUE}
-print(summary(dailySteps))
+theSummary <- summary(dailySteps, na.rm=TRUE)
+print(theSummary)
 
-theMean <- as.numeric(summary(dailySteps)["Mean"])
+theMean <- as.numeric(theSummary["Mean"])
 textMean <- paste("The Mean Number of Steps/Day :", theMean)
 print(theMean)
 print(textMean)
 
-theMedian <- as.numeric(summary(dailySteps)["Median"])
+theMedian <- as.numeric(theSummary["Median"])
 textMedian <- paste("The Median Number of Steps/Day :", theMedian)
 print(theMedian)
 print(textMedian)
@@ -57,7 +58,20 @@ print(textMedian)
 
 ## What is the average daily activity pattern?
 
+With 5 minute sampling periods there are 12/hour * 24 hours = 288 sample periods/day (0,5,10,15,...)
 
+```{r dailypattern, echo=TRUE}
+
+require(data.table)
+
+intervalsteps <- data.frame(interval = activity$interval, steps = activity$steps)
+intervalstepsdt <- data.table(intervalsteps)
+dtinterval <- intervalstepsdt[, mean(steps, na.rm= TRUE), by = interval]
+setnames(dtinterval, "V1", "averageSteps")
+plot(dtinterval$interval, dtinterval$averageSteps, type="l", main="Mean Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods -]in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
+
+plot(activity$interval, activity$steps, main="All Steps/Sampling Interval (5m) for all days from Oct-Nov 2012", xlab = "5 minute interval periods -]in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps")
+```
 
 ## Imputing missing values
 
