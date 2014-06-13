@@ -32,12 +32,28 @@ dailySteps <- tapply(activity$steps, activity$date, FUN=sum)
 Create a histogram of the total number of steps taken each day
 
 ```{r plotHistogram, echo=TRUE}
-hist(dailySteps)
+hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 22500, 25000), main = paste("Subject Anonymous Activity (Steps) from Oct-Nov 2012"), xlab = "Steps/Day", ylab = "Number of Days" , ylim = c(0,20))
+
+
 ```
+
+
 
 ## What is mean total number of steps taken per day?
 
+```{r meanmedian, echo=TRUE}
+print(summary(dailySteps))
 
+theMean <- as.numeric(summary(dailySteps)["Mean"])
+textMean <- paste("The Mean Number of Steps/Day :", theMean)
+print(theMean)
+print(textMean)
+
+theMedian <- as.numeric(summary(dailySteps)["Median"])
+textMedian <- paste("The Median Number of Steps/Day :", theMedian)
+print(theMedian)
+print(textMedian)
+```
 
 ## What is the average daily activity pattern?
 
