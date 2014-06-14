@@ -264,3 +264,52 @@ print(textMedian)
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+
+```r
+xactivity$weekday <- weekdays(xactivity$date)  #adds a factor column for the day of the week
+xactivity$daytype <- ifelse(xactivity$weekday %in% c("Saturday","Sunday"), "weekend", "weekday")
+
+
+xintervalsteps <- data.frame(interval = xactivity$interval, steps = xactivity$steps, daytype = xactivity$daytype)
+xintervalstepsdt <- data.table(xintervalsteps)
+
+weekend <- xintervalstepsdt[xintervalstepsdt$daytype == "weekend", ]
+weekday <- xintervalstepsdt[xintervalstepsdt$daytype == "weekday", ]
+
+weekendinterval <- weekend[, mean(steps, na.rm= TRUE), by = interval]
+weekdayinterval <- weekday[, mean(steps, na.rm= TRUE), by = interval]
+setnames(weekendinterval, "V1", "averageSteps")
+setnames(weekdayinterval, "V1", "averageSteps")
+weekendinterval$daytype <- "weekend"
+weekdayinterval$daytype <- "weekday"
+
+alldays <- rbind(weekdayinterval, weekendinterval)
+
+#Panel plot using Lattice system
+require(lattice)
+```
+
+```
+## Loading required package: lattice
+```
+
+```r
+xyplot(alldays$averageSteps ~ alldays$interval | alldays$daytype, type = "l", main="Subject Anon. Oct-Nov 2012", xlab="Time interval 0=12am, 1200=12pm", ylab = "Average Steps", layout = c(1,2))
+```
+
+![plot of chunk weekdayanalysis](figure/weekdayanalysis1.png) 
+
+```r
+# final extra plot to see an overlay of activity between weekend and weekday.
+
+plot(weekendinterval$interval, weekendinterval$averageSteps, type="l", main="Mean Steps/Sampling Interval (5m) for weekend days from Oct-Nov 2012", xlab = "5 minute interval periods in format HourMin (0 = 12am, 1200 = 12pm)", ylab = "Steps", col="red")
+
+points(weekdayinterval$interval, weekdayinterval$averageSteps, type="l", col="blue")
+legend("topright", c("Weekend", "Week Day"), text.col=c("red", "blue"))
+```
+
+![plot of chunk weekdayanalysis](figure/weekdayanalysis2.png) 
+
+### The last plot shows that the subject became active later in the morning on weekends and was more active during the day on the weekends.  Observations consistent with expectations.
+
