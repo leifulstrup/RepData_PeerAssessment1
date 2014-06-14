@@ -38,7 +38,7 @@ hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 225
 ```
 
 
-## What is mean total number of steps taken per day?
+## What is the mean (average) total number of steps taken per day?
 
 ```{r meanmedian, echo=TRUE}
 theSummary <- summary(dailySteps, na.rm=TRUE)
@@ -73,7 +73,7 @@ maxsteps <- dtinterval[dtinterval$averageSteps == max(dtinterval$averageSteps, n
 print(maxsteps)
 ```
 
-### Time interval `r maxsteps$interval` has the maximum average steps per time period with `r maxsteps$averageSteps` average steps.
+### Time interval `r maxsteps$interval` has the maximum average steps per time period with `r round(maxsteps$averageSteps)` average steps.
 
 
 ```{r  plotrawsteps ,echo=TRUE}

@@ -43,7 +43,7 @@ hist(dailySteps, breaks = c(0,2500,5000,7500, 10000,12500,15000,17500,20000, 225
 ![plot of chunk plotHistogram](figure/plotHistogram.png) 
 
 
-## What is mean total number of steps taken per day?
+## What is the mean (average) total number of steps taken per day?
 
 
 ```r
@@ -125,7 +125,7 @@ print(maxsteps)
 ## 1:      835        206.2
 ```
 
-### Time interval 835 has the maximum average steps per time period with 206.1698 average steps.
+### Time interval 835 has the maximum average steps per time period with 206 average steps.
 
 
 
